@@ -21,31 +21,22 @@ public:
     ThreadPoolPrivate();
 
     bool tryStart(Runnable* task);
-    void enqueueTask(Runnable* task, int priority = 0);
+    void enqueueTask(Runnable* task);
     int activeThreadCount() const;
 
-//    void tryToStartMoreThreads();
-   bool tooManyThreadsActive() const;
+    bool tooManyThreadsActive() const;
 
     void startThread(Runnable* runnable = 0);
-//    void reset();
-//    bool waitForDone(int msecs);
-//    void clear();
-//    bool stealRunnable(Runnable* runnable);
-//    void stealAndRunRunnable(Runnable* runnable);
-    void setmaxThreadCount(int count);
+    void setMaxThreadCount(int count);
 
     mutable QMutex mutex;
     QSet<ThreadPoolThread*> allThreads;
     QQueue<ThreadPoolThread*> waitingThreads;
-    QQueue<ThreadPoolThread*> expiredThreads;
-    QVector<QPair<Runnable*, int> > queue;
+    QVector<Runnable*> queue;
     QWaitCondition noActiveThreads;
 
     bool isExiting;
-    int expiryTimeout;
-    int maxThreadCount = 5;
-    int reservedThreads;
+    int maxThreadCount;
     int activeThreads;
 };
 

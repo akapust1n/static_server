@@ -1,15 +1,15 @@
 #include "MyClient.h"
 #include "ThreadPool.h"
 
-MyClient::MyClient(QObject *parent) :
-    QObject(parent)
+MyClient::MyClient(QObject* parent)
+    : QObject(parent)
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(5);
+    //ThreadPool::getInstanse().setetMaxThreadCount(5);
 }
 
 MyClient::~MyClient()
 {
-    qDebug()<<"MyClient destroyed";
+    qDebug() << "MyClient destroyed";
 }
 
 void MyClient::setSocket(qintptr descriptor)
@@ -17,7 +17,7 @@ void MyClient::setSocket(qintptr descriptor)
     // make a new socket
     socket = new QTcpSocket(this);
 
-//     qDebug() << "A new socket created!";
+    //     qDebug() << "A new socket created!";
 
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
@@ -28,11 +28,10 @@ void MyClient::setSocket(qintptr descriptor)
     qDebug() << " Client connected at " << descriptor;
 }
 
-
 // asynchronous - runs separately from the thread we created
 void MyClient::connected()
 {
-   //  qDebug() << "Client connected event";
+    qDebug() << "Client connected event";
 }
 
 // asynchronous
@@ -48,22 +47,19 @@ void MyClient::disconnected()
 
 void MyClient::readyRead()
 {
-  //   qDebug() << "MyClient::readyRead()";
-   //  qDebug() << socket->readAll();
 
     // Time consumer
-    MyTask *mytask = new MyTask();
-   mytask->setAutoDelete(true);
+    MyTask* mytask = new MyTask();
+    mytask->setAutoDelete(true);
 
     // using queued connection
     connect(mytask, SIGNAL(Result(int)), this, SLOT(TaskResult(int)), Qt::QueuedConnection);
 
-   //  qDebug() << "Starting a new task using a thread from the QThreadPool";
+    //  qDebug() << "Starting a new task using a thread from the QThreadPool";
 
     // QThreadPool::globalInstance() returns global QThreadPool instance
 
-  ThreadPool::getInstanse().start(mytask);
-
+    ThreadPool::getInstanse().start(mytask);
 }
 
 // After a task performed a time consuming task,
@@ -76,9 +72,7 @@ void MyClient::TaskResult(int Number)
 
     socket->write(Buffer);
     socket->close();
-    socket->disconnectFromHost();
-    qDebug()<<"Socker closed";
+    qDebug() << "Socker closed";
 
- ///   emit disconnected();
-
+    ///   emit disconnected();
 }

@@ -17,7 +17,6 @@ SOURCES += main.cpp \
     MyClient.cpp \
     MyTask.cpp \
     ThreadPool.cpp \
-    Worker.cpp \
     Runnable.cpp
 
 # The following define makes your compiler emit warnings if you use
@@ -36,6 +35,5 @@ HEADERS += \
     MyClient.h \
     MyTask.h \
     ThreadPool.h \
-    Worker.h \
     Runnable.h
 #CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
