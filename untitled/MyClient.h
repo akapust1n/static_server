@@ -12,6 +12,7 @@ class MyClient : public QObject
     Q_OBJECT
 public:
     explicit MyClient(QObject *parent = 0);
+    ~MyClient();
     void setSocket(qintptr Descriptor);
 
 signals:

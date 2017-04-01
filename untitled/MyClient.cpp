@@ -1,9 +1,15 @@
 #include "MyClient.h"
+#include "ThreadPool.h"
 
 MyClient::MyClient(QObject *parent) :
     QObject(parent)
 {
     QThreadPool::globalInstance()->setMaxThreadCount(5);
+}
+
+MyClient::~MyClient()
+{
+    qDebug()<<"MyClient destroyed";
 }
 
 void MyClient::setSocket(qintptr descriptor)
@@ -19,7 +25,7 @@ void MyClient::setSocket(qintptr descriptor)
 
     socket->setSocketDescriptor(descriptor);
 
- //    qDebug() << " Client connected at " << descriptor;
+    qDebug() << " Client connected at " << descriptor;
 }
 
 
@@ -32,7 +38,7 @@ void MyClient::connected()
 // asynchronous
 void MyClient::disconnected()
 {
-   //  qDebug() << "Client disconnected";
+    qDebug() << "Client disconnected";
 }
 
 // Our main thread of execution
@@ -47,7 +53,7 @@ void MyClient::readyRead()
 
     // Time consumer
     MyTask *mytask = new MyTask();
-    mytask->setAutoDelete(true);
+   mytask->setAutoDelete(true);
 
     // using queued connection
     connect(mytask, SIGNAL(Result(int)), this, SLOT(TaskResult(int)), Qt::QueuedConnection);
@@ -55,7 +61,8 @@ void MyClient::readyRead()
    //  qDebug() << "Starting a new task using a thread from the QThreadPool";
 
     // QThreadPool::globalInstance() returns global QThreadPool instance
-    QThreadPool::globalInstance()->start(mytask);
+
+  ThreadPool::getInstanse().start(mytask);
 
 }
 
@@ -69,6 +76,9 @@ void MyClient::TaskResult(int Number)
 
     socket->write(Buffer);
     socket->close();
-    emit disconnected();
+    socket->disconnectFromHost();
+    qDebug()<<"Socker closed";
+
+ ///   emit disconnected();
 
 }

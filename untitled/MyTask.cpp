@@ -1,4 +1,6 @@
 #include "MyTask.h"
+#include <QDebug>
+
 
 #include "MyTask.h"
 #include <QDebug>
@@ -6,7 +8,12 @@
 
 MyTask::MyTask()
 {
-  //  qDebug() << "MyTask()";
+    //  qDebug() << "MyTask()";
+}
+
+MyTask::~MyTask()
+{
+    qDebug() << "MyTask() destoroyed";
 }
 
 // When the thread pool kicks up

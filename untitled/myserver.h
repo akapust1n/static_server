@@ -4,12 +4,14 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QAbstractSocket>
+#include <QString>
+#include <ThreadPool.h>
 
 class MyServer : public QTcpServer
 {
     Q_OBJECT
 public:
-    explicit MyServer(QObject *parent = 0);
+    explicit MyServer(int maxNumCores, QString rootDir,QObject *parent = 0);
     void startServer();
 
 protected:
@@ -18,6 +20,8 @@ protected:
 signals:
 
 public slots:
+
+
 
 };
 
