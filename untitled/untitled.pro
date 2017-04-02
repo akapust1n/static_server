@@ -14,7 +14,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     myserver.cpp \
-    MyClient.cpp \
     MyTask.cpp \
     ThreadPool.cpp \
     Runnable.cpp
@@ -32,7 +31,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     myserver.h \
-    MyClient.h \
     MyTask.h \
     ThreadPool.h \
     Runnable.h

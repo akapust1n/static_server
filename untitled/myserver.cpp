@@ -19,10 +19,10 @@ void MyServer::startServer()
 void MyServer::incomingConnection(qintptr socketDescriptor)
 {
 
-    MyClient* client = new MyClient(this);
-    client->setSocket(socketDescriptor);
+  //  MyClient* client = new MyClient(this);
+  //  client->setSocket(socketDescriptor);
 
-//    MyTask* mytask = new MyTask(socketDescriptor);
-//    mytask->setAutoDelete(true);
-//    ThreadPool::getInstanse().start(mytask);
+    MyTask* mytask = new MyTask(socketDescriptor);
+    mytask->setAutoDelete(true);
+    ThreadPool::getInstanse().start(mytask);
 }
