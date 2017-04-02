@@ -57,10 +57,11 @@ class ThreadPool : public QObject {
 public:
     void start(Runnable* runnable);
     static ThreadPool &getInstanse();
+    void setMaxThreadCount(int count);
 
 private:
     ThreadPool(){};
-    int maxThreads;
+    int maxThreads = 4; //default value
 };
 
 #endif // THREADPOOL_H

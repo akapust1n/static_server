@@ -9,6 +9,7 @@ void ThreadPool::start(Runnable* Runnable)
         return;
 
     static ThreadPoolPrivate* d = new ThreadPoolPrivate;
+    d->setMaxThreadCount(maxThreads);
     QMutexLocker locker(&d->mutex);
     if (!d->tryStart(Runnable)) {
         d->enqueueTask(Runnable);
@@ -26,12 +27,16 @@ ThreadPool& ThreadPool::getInstanse()
     return instance;
 }
 
+void ThreadPool::setMaxThreadCount(int count)
+{
+    maxThreads = count;
+}
+
 ThreadPoolPrivate::ThreadPoolPrivate()
     : isExiting(false)
     , maxThreadCount(qAbs(QThread::idealThreadCount()))
     , activeThreads(0)
 {
-    maxThreadCount = 1;
 }
 
 bool ThreadPoolPrivate::tryStart(Runnable* task)
@@ -45,10 +50,10 @@ bool ThreadPoolPrivate::tryStart(Runnable* task)
     }
 
     // can't do anything if we're over the limit
-//    if (activeThreadCount() >= maxThreadCount) {
-//        qDebug() << "Error thread limit";
-//        return false;
-//    }
+    if (activeThreadCount() >= maxThreadCount) {
+        qDebug() << "Error thread limit";
+        return false;
+    }
     qDebug() << "Start new Thread p2";
     if (waitingThreads.count() > 0) {
         // recycle an available thread

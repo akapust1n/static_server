@@ -1,10 +1,10 @@
 #include "myserver.h"
-#include "MyClient.h"
 #include <QScopedPointer>
 
 MyServer::MyServer(int maxThreads, QString rootDir, QObject* parent)
     : QTcpServer(parent)
 {
+    ThreadPool::getInstanse().setMaxThreadCount(maxThreads);
 }
 
 void MyServer::startServer()
@@ -18,11 +18,8 @@ void MyServer::startServer()
 
 void MyServer::incomingConnection(qintptr socketDescriptor)
 {
-
-  //  MyClient* client = new MyClient(this);
-  //  client->setSocket(socketDescriptor);
-
-    MyTask* mytask = new MyTask(socketDescriptor);
+    qDebug() << "incoming Connection";
+    MyTask* mytask = new MyTask(socketDescriptor, this);
     mytask->setAutoDelete(true);
     ThreadPool::getInstanse().start(mytask);
 }

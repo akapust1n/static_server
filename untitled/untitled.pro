@@ -16,7 +16,8 @@ SOURCES += main.cpp \
     myserver.cpp \
     MyTask.cpp \
     ThreadPool.cpp \
-    Runnable.cpp
+    Runnable.cpp \
+    RequestHandler.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -33,5 +34,6 @@ HEADERS += \
     myserver.h \
     MyTask.h \
     ThreadPool.h \
-    Runnable.h
+    Runnable.h \
+    RequestHandler.h
 #CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
