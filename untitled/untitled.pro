@@ -4,7 +4,7 @@ QT += network
 
 CONFIG += c++14
 
-TARGET = untitled
+TARGET = httpd
 QT       += network
 
 CONFIG += console
