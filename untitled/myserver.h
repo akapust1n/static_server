@@ -11,15 +11,14 @@ class MyServer : public QTcpServer
 {
     Q_OBJECT
 public:
-    explicit MyServer(int maxNumCores, QString rootDir,QObject *parent = 0);
+    explicit MyServer(int maxNumCores, QString _rootDir,QObject *parent = 0);
     void startServer();
 
 protected:
     void incomingConnection(qintptr socketDescriptor);
 
-signals:
-
-public slots:
+private:
+    QString rootDir;
 
 
 
