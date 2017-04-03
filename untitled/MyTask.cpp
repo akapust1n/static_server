@@ -16,7 +16,7 @@ MyTask::~MyTask()
 
 void MyTask::run()
 {
-    RequestHandler requestHandler;
+    RequestHandler requestHandler(".");
     m_socket = new QTcpSocket;
     m_socket->setSocketDescriptor(m_socketDescriptor);
 
@@ -25,13 +25,15 @@ void MyTask::run()
     //qDebug()<< m_socket->readAll();
     //qDebug()<<"END READ ALL";
     requestHandler.handleRequest(m_socket);
-    QByteArray Buffer;
-    Buffer.append("\r\nTask result = ");
 
-    Buffer.append(QString::number(48));
+//    QByteArray Buffer;
+//    Buffer.append("\r\nTask result = ");
 
-    m_socket->write(Buffer);
-    m_socket->waitForBytesWritten(3000);
+//    Buffer.append(QString::number(48));
+
+//    m_socket->write(Buffer);
+//    m_socket->waitForBytesWritten(3000);
+    m_socket->close();
 //usleep (3000* 1000);
 
     qDebug() << "End run";

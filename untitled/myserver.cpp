@@ -9,7 +9,7 @@ MyServer::MyServer(int maxThreads, QString rootDir, QObject* parent)
 
 void MyServer::startServer()
 {
-    if (listen(QHostAddress::Any, 1234)) {
+    if (listen(QHostAddress::Any, 80)) {
         qDebug() << "Server: started";
     } else {
         qDebug() << "Server: not started!";
