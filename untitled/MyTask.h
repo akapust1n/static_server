@@ -3,6 +3,7 @@
 #include <QTcpSocket>
 #include <QObject>
 #include <Runnable.h>
+#include <QRunnable>
 
 class MyTask : public QObject, public Runnable
 {

@@ -51,17 +51,17 @@ int main(int argc, char* argv[])
         if (!args.last().isEmpty())
             rootDirectory = args.last();
 
-    std::cout << " PID: " << pid;
-    std::cout << " Cores: " << maxCores;
+   // std::cout << " PID: " << pid;
+   // std::cout << " Cores: " << maxCores;
 
     QString tasknet = "sudo taskset -p -c " + getProcs(maxCores) + " " + QString::number(pid);
     system(tasknet.toStdString().c_str());
 
     int numCPU = sysconf(_SC_NPROCESSORS_ONLN);
-    std::cout << "availableProcessors: " << numCPU;
+   // std::cout << "availableProcessors: " << numCPU;
 
     // Create an instance of a server and then start it.
-    int threadPoolSize = 1;
+    int threadPoolSize = QThread::idealThreadCount();
     MyServer server(threadPoolSize, rootDirectory);
     server.startServer();
     return a.exec();

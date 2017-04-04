@@ -17,8 +17,9 @@ void RequestHandler::handleRequest(QTcpSocket* socket)
 {
     // qDebug()<<socket->readAll();
     //qDebug()<<"READ @";
+    socket->waitForReadyRead();
+
     QByteArray buffer = socket->readAll();
-    QString s = QString::fromUtf8(buffer);
 
     QTextStream stream(buffer);
 
@@ -35,7 +36,7 @@ void RequestHandler::handleRequest(QTcpSocket* socket)
     } else {
         notImplemented(protocol, socket);
     }
-    qDebug() << method << url << protocol;
+  //  qDebug() << method << url << protocol;
 }
 
 QString RequestHandler::decodeUrl(const QString& _url)
@@ -67,7 +68,7 @@ QString RequestHandler::decodeUrl(const QString& _url)
 
 void RequestHandler::GET(const QString url, const QString protocol, QTcpSocket* socket)
 {
-    qDebug() << "GET INTRO";
+   // qDebug() << "GET INTRO";
     QString path = root_dir + url;
     QString headers(getHeaders());
     int code;
@@ -75,10 +76,10 @@ void RequestHandler::GET(const QString url, const QString protocol, QTcpSocket* 
     if ((dir = isDirectory(path))) {
         if ((*path.end()) != '/')
             path += '/';
-        qDebug() << "IT is Directory";
+       // qDebug() << "IT is Directory";
         path += "index.html";
     }
-    qDebug() << "PATH" << path;
+    //qDebug() << "PATH" << path;
     if (fileExists(path)) {
         code = 200;
         QString extention = dir ? "html" : getExtension(url);
@@ -90,7 +91,7 @@ void RequestHandler::GET(const QString url, const QString protocol, QTcpSocket* 
         writeToSocket(file.readAll(), socket);
         file.close();
     } else {
-        qDebug() << "FILE NOT EXIST";
+        //qDebug() << "FILE NOT EXIST";
         code = (dir) ? 403 : 404;
         headers += getContentHeaders((QString((dir) ? forbidden : not_found).length()), "html");
         writeToSocket(getFullHeaders(protocol, getCode(code), headers), socket);
@@ -166,7 +167,7 @@ bool RequestHandler::fileExists(const QString& path) const
 QString RequestHandler::getExtension(const QString& url) const
 {
     int pos = url.lastIndexOf('.');
-    qDebug()<<"EXTENTION"<<((pos != -1) ? url.split('.').last() : "txt");
+   // qDebug()<<"EXTENTION"<<((pos != -1) ? url.split('.').last() : "txt");
     return (pos != -1) ? url.split('.').last() : "txt";
 }
 

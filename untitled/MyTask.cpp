@@ -12,7 +12,7 @@ MyTask::MyTask(qintptr socketDescriptor, QString _rootDir, QObject* parent)
 
 MyTask::~MyTask()
 {
-    qDebug() << "MyTask() destoroyed";
+    //qDebug() << "MyTask() destoroyed";
 }
 
 void MyTask::run()
@@ -21,12 +21,11 @@ void MyTask::run()
     m_socket = new QTcpSocket;
     m_socket->setSocketDescriptor(m_socketDescriptor);
 
-    qDebug() << " Client connected at " << m_socketDescriptor;
-    m_socket->waitForReadyRead(3000);
+  //  qDebug() << " Client connected at " << m_socketDescriptor;
 
     requestHandler.handleRequest(m_socket);
     m_socket->close();
 
-    qDebug() << "End run";
+ //   qDebug() << "End run";
     delete m_socket;
 }
