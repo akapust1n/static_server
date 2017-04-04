@@ -15,8 +15,7 @@ RequestHandler::RequestHandler(QString _root_dir)
 
 void RequestHandler::handleRequest(QTcpSocket* socket)
 {
-    // qDebug()<<socket->readAll();
-    //qDebug()<<"READ @";
+
     socket->waitForReadyRead();
 
     QByteArray buffer = socket->readAll();
@@ -145,7 +144,7 @@ QString RequestHandler::getHeaders() const
     QLocale locale(QLocale::English, QLocale::UnitedStates);
     QString date = locale.toString(QDateTime::currentDateTimeUtc(), "ddd, dd MMM yyyy hh:mm:ss 'GMT'");
     QString headers = QString("Server: WebServer/1.0 (Linux)\r\n") + QString("Date: ") + date + QString("\r\n")
-        + QString("Connection: keep-alive\r\n"); //keep-alive дает nginx
+        + QString("Connection:  close\r\n"); //keep-alive дает nginx
     return headers;
 }
 
@@ -221,15 +220,14 @@ void RequestHandler::writeFileToSocket(QString path, QTcpSocket* socket)
    // qDebug()<<"Data was WRITTTEN";
 
 }
-
+    in.close();
     delete [] temp;
-
-
 }
 void RequestHandler::writeToSocket(QString  data, QTcpSocket* socket)
 {
     QByteArray buffer;
         buffer.append(data);
         socket->write(buffer);
+        socket->flush();
        // socket->waitForBytesWritten(timeout);
 }
