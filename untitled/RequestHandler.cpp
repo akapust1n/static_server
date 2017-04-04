@@ -2,7 +2,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QTextCodec>
-#include <QTextStream>
+#include <QDataStream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -85,11 +85,8 @@ void RequestHandler::GET(const QString url, const QString protocol, QTcpSocket* 
         QString extention = dir ? "html" : getExtension(url);
         headers += getContentHeaders(fileSize(path), extention);
         writeToSocket(getFullHeaders(protocol, getCode(code), headers), socket);
-        QFile file(path);
 
-        file.open(QIODevice::ReadOnly);
-        writeToSocket(file.readAll(), socket);
-        file.close();
+        writeFileToSocket(path, socket);
     } else {
         //qDebug() << "FILE NOT EXIST";
         code = (dir) ? 403 : 404;
@@ -146,9 +143,9 @@ void RequestHandler::notImplemented(const QString& protocol, QTcpSocket* socket)
 QString RequestHandler::getHeaders() const
 {
     QLocale locale(QLocale::English, QLocale::UnitedStates);
-    QString date = locale.toString(QDateTime::currentDateTime(), "ddd, dd MMM yyyy hh:mm:ss 'GMT'");
+    QString date = locale.toString(QDateTime::currentDateTimeUtc(), "ddd, dd MMM yyyy hh:mm:ss 'GMT'");
     QString headers = QString("Server: WebServer/1.0 (Linux)\r\n") + QString("Date: ") + date + QString("\r\n")
-        + QString("Connection: close\r\n");
+        + QString("Connection: keep-alive\r\n"); //keep-alive дает nginx
     return headers;
 }
 
@@ -171,14 +168,14 @@ QString RequestHandler::getExtension(const QString& url) const
     return (pos != -1) ? url.split('.').last() : "txt";
 }
 
-size_t RequestHandler::fileSize(const QString& path) const
+qint64 RequestHandler::fileSize(const QString& path) const
 {
-    //ПЕРЕДЕЛАТЬ НА QSTRING? ВОЗМОЖНО QDATASTREAM
-    std::ifstream in(path.toStdString(), std::ifstream::ate | std::ifstream::binary);
-    return (size_t)in.tellg();
+    QFile file(path);
+
+    return file.size();
 }
 
-QString RequestHandler::getContentHeaders(size_t length, const QString& ext) const
+QString RequestHandler::getContentHeaders(qint64 length, const QString& ext) const
 {
     QString headers = QString("Content-Length: ") + QString::number(length) + QString("\r\n") + QString("Content-Type: ") + extToMime[ext] + QString("\r\n");
     return headers;
@@ -208,10 +205,31 @@ QString RequestHandler::getCode(int code) const
     }
 }
 
-void RequestHandler::writeToSocket(const auto data, QTcpSocket* socket)
+void RequestHandler::writeFileToSocket(QString path, QTcpSocket* socket)
+{
+
+
+    int bufferSize = 4'000; //4 кб буффер
+
+    char *temp = new char[bufferSize];
+    std::ifstream in(path.toStdString());
+    //qDebug()<<path<<bufferSize;
+    //можно проще
+    while (int count = static_cast<int>(in.readsome(temp, bufferSize))) {
+                socket->write(temp, count);
+                socket->flush();
+   // qDebug()<<"Data was WRITTTEN";
+
+}
+
+    delete [] temp;
+
+
+}
+void RequestHandler::writeToSocket(QString  data, QTcpSocket* socket)
 {
     QByteArray buffer;
-    buffer.append(data);
-    socket->write(buffer);
-    socket->waitForBytesWritten(timeout);
+        buffer.append(data);
+        socket->write(buffer);
+       // socket->waitForBytesWritten(timeout);
 }

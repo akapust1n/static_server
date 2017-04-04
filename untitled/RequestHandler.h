@@ -1,5 +1,6 @@
 #ifndef REQUESTHANDLER_H
 #define REQUESTHANDLER_H
+#include <QFile>
 #include <QMap>
 #include <QString>
 #include <QTcpSocket>
@@ -17,21 +18,18 @@ private:
     void notImplemented(const QString& protocol, QTcpSocket* socket);
 
     QString getHeaders() const;
-    QString getContentHeaders(size_t length, const QString& ext) const;
+    QString getContentHeaders(qint64 length, const QString& ext) const;
     QString getFullHeaders(const QString& protocol, const QString& code,
         const QString& headers) const;
 
     bool isDirectory(const QString& str) const;
     bool fileExists(const QString& path) const;
     QString getExtension(const QString& url) const;
-    size_t fileSize(const QString& path) const;
+    qint64 fileSize(const QString& path) const;
     QString getCode(int code) const;
 
-    void writeToSocket(const auto data, QTcpSocket* socket);
-    //void writeToSocket(const QByteArray data, QTcpSocket* socket);
-
-
-    int timeout = 3000;
+    void writeFileToSocket(QString path, QTcpSocket* socket);
+    void writeToSocket(QString data, QTcpSocket* socket);
 
 private:
     //consts
@@ -61,7 +59,8 @@ private:
             { "jpeg", "image/jpeg" },
             { "png", "image/png" },
             { "gif", "image/gif" },
-            { "swf", "application/x-shockwave-flash" }
+            { "swf", "application/x-shockwave-flash" },
+            { "iso", "application/octet-stream" }
         };
 };
 
