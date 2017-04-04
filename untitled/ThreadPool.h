@@ -35,7 +35,6 @@ public:
     QVector<Runnable*> queue;
     QWaitCondition noActiveThreads;
 
-    bool isExiting;
     int maxThreadCount;
     int activeThreads;
 };

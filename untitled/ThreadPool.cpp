@@ -13,7 +13,7 @@ void ThreadPool::start(Runnable* Runnable)
     QMutexLocker locker(&d->mutex);
     if (!d->tryStart(Runnable)) {
         d->enqueueTask(Runnable);
-
+        //label[1]
         if (!d->waitingThreads.isEmpty())
             d->waitingThreads.takeFirst()->runnableReady.wakeOne();
     }
@@ -33,8 +33,7 @@ void ThreadPool::setMaxThreadCount(int count)
 }
 
 ThreadPoolPrivate::ThreadPoolPrivate()
-    : isExiting(false)
-    , maxThreadCount(qAbs(QThread::idealThreadCount()))
+    :  maxThreadCount(qAbs(QThread::idealThreadCount()))
     , activeThreads(0)
 {
 }
@@ -44,17 +43,17 @@ bool ThreadPoolPrivate::tryStart(Runnable* task)
     if (allThreads.isEmpty()) {
         // always create at least one thread
         startThread(task);
-        qDebug() << "Start new Thread p1";
+       // qDebug() << "Start new Thread p1";
 
         return true;
     }
 
     // can't do anything if we're over the limit
     if (activeThreadCount() >= maxThreadCount) {
-        qDebug() << "Error thread limit";
+       // qDebug() << "Error thread limit";
         return false;
     }
-    qDebug() << "Start new Thread p2";
+   // qDebug() << "Start new Thread p2";
     if (waitingThreads.count() > 0) {
         // recycle an available thread
         enqueueTask(task);
@@ -62,7 +61,7 @@ bool ThreadPoolPrivate::tryStart(Runnable* task)
         return true;
     }
 
-    qDebug() << "Start new Thread p3";
+  //  qDebug() << "Start new Thread p3";
     // start a new thread
     startThread(task);
     return true;
@@ -82,9 +81,9 @@ void ThreadPoolPrivate::enqueueTask(Runnable* runnable)
 
 int ThreadPoolPrivate::activeThreadCount() const
 {
-    qDebug() << "Active Threads" << (allThreads.count()
-                                        - waitingThreads.count());
-    qDebug() << "All Threads" << (allThreads.count());
+   // qDebug() << "Active Threads" << (allThreads.count()
+      //                                  - waitingThreads.count());
+  //  qDebug() << "All Threads" << (allThreads.count());
 
     return (allThreads.count()
         - waitingThreads.count());
@@ -152,10 +151,6 @@ void ThreadPoolThread::run()
             r = !manager->queue.isEmpty() ? manager->queue.takeFirst() : 0;
         } while (r != 0);
 
-        if (manager->isExiting) {
-            registerThreadInactive();
-            break;
-        }
 
         //if too many threads are active, expire this thread
         bool expired = manager->tooManyThreadsActive();
@@ -164,6 +159,7 @@ void ThreadPoolThread::run()
             registerThreadInactive();
             // wait for work, exiting after the expiry timeout is reached # at now without timeout
             // runnableReady.wait(locker.mutex(), manager->expiryTimeout);
+            //wait for label[1]
             runnableReady.wait(locker.mutex());
 
             ++manager->activeThreads;
