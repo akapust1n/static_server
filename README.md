@@ -1,7 +1,7 @@
 # Benchmark
 Server for returning static files
 * [404](#404)
-* [html](#Page-html)
+* [html](#page-html)
 * [403](#403)
 ## 404
 ### Server
