@@ -1,5 +1,8 @@
 # Benchmark
 Server for returning static files
+* [404](#404)
+* [html](#Page-html)
+* [403](#403)
 ## 404
 ### Server
 ```
@@ -239,5 +242,121 @@ Percentage of the requests served within a certain time (ms)
   98%      4
   99%      5
  100%     48 (longest request)
+```
+## 403
+### Server 
+```
+alexey@alexey-GE60-2PL:~/park/3sem/highload/static_server/build-untitled-Desktop_Qt_5_8_0_GCC_64bit-Release$ ab -n 50000 -c 100 localhost/
+This is ApacheBench, Version 2.3 <$Revision: 1706008 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 5000 requests
+Completed 10000 requests
+Completed 15000 requests
+Completed 20000 requests
+Completed 25000 requests
+Completed 30000 requests
+Completed 35000 requests
+Completed 40000 requests
+Completed 45000 requests
+Completed 50000 requests
+Finished 50000 requests
+
+
+Server Software:        WebServer/1.0
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /
+Document Length:        85 bytes
+
+Concurrency Level:      100
+Time taken for tests:   2.617 seconds
+Complete requests:      50000
+Failed requests:        0
+Non-2xx responses:      50000
+Total transferred:      12150000 bytes
+HTML transferred:       4250000 bytes
+Requests per second:    19109.48 [#/sec] (mean)
+Time per request:       5.233 [ms] (mean)
+Time per request:       0.052 [ms] (mean, across all concurrent requests)
+Transfer rate:          4534.77 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    3  43.9      1    1025
+Processing:     0    2   2.5      2     205
+Waiting:        0    2   2.5      1     205
+Total:          1    5  44.1      3    1030
+
+Percentage of the requests served within a certain time (ms)
+  50%      3
+  66%      3
+  75%      3
+  80%      5
+  90%      5
+  95%      6
+  98%      7
+  99%      7
+ 100%   1030 (longest request)
+```
+###nginx
+```ab -n 50000 -c 100 localhost/
+This is ApacheBench, Version 2.3 <$Revision: 1706008 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 5000 requests
+Completed 10000 requests
+Completed 15000 requests
+Completed 20000 requests
+Completed 25000 requests
+Completed 30000 requests
+Completed 35000 requests
+Completed 40000 requests
+Completed 45000 requests
+Completed 50000 requests
+Finished 50000 requests
+
+
+Server Software:        nginx/1.10.1
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /
+Document Length:        170 bytes
+
+Concurrency Level:      100
+Time taken for tests:   2.022 seconds
+Complete requests:      50000
+Failed requests:        0
+Non-2xx responses:      50000
+Total transferred:      17600000 bytes
+HTML transferred:       8500000 bytes
+Requests per second:    24728.29 [#/sec] (mean)
+Time per request:       4.044 [ms] (mean)
+Time per request:       0.040 [ms] (mean, across all concurrent requests)
+Transfer rate:          8500.35 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   0.7      1       3
+Processing:     1    3   2.5      3      57
+Waiting:        0    2   2.6      2      57
+Total:          2    4   2.5      4      58
+
+Percentage of the requests served within a certain time (ms)
+  50%      4
+  66%      4
+  75%      5
+  80%      5
+  90%      5
+  95%      5
+  98%      6
+  99%      6
+ 100%     58 (longest request)
 ```
 
